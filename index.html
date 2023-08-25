@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML Product Visualisatie</title>
+    <style>
+        /* Enkele basisstijlen voor de producten */
+        div {
+            border: 1px solid black;
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    // Functie om de XML-gegevens van een bestand te laden
+    function loadXML(filename) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                displayProducts(this);
+            }
+        };
+        xhttp.open("GET", filename, true);
+        xhttp.send();
+    }
+
+    function displayProducts(xml) {
+        var xmlDoc = xml.responseXML;
+        var products = xmlDoc.getElementsByTagName("Product");
+
+        for (var i = 0; i < products.length; i++) {
+            var name = products[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue;
+            var price = products[i].getElementsByTagName("Price")[0].childNodes[0].nodeValue;
+            var image = products[i].getElementsByTagName("Image")[0].childNodes[0].nodeValue;
+
+            // Maak HTML-elementen voor elk product
+            var productDiv = document.createElement("div");
+            var productName = document.createElement("h2");
+            var productPrice = document.createElement("p");
+            var productImage = document.createElement("img");
+
+            productName.textContent = name;
+            productPrice.textContent = "Price: $" + price;
+            productImage.src = image;
+
+            productDiv.appendChild(productName);
+            productDiv.appendChild(productPrice);
+            productDiv.appendChild(productImage);
+
+            // Voeg het product toe aan de webpagina
+            document.body.appendChild(productDiv);
+        }
+    }
+
+    // Laad de XML-gegevens bij het laden van de pagina
+    window.onload = function() {
+        loadXML("230809_web_Cn_PERFECTA-ALG-VERKEURO1.xml");
+    };
+</script>
+
+</body>
+</html>
